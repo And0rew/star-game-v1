@@ -1,0 +1,1 @@
+zip -vr dist/star-game.zip . -x "*.DS_Store" "dist/*" "star-game-server/node_modules/*"

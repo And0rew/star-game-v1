@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Звездные войны</title>
+	<style>
+		.adm-control {
+			position: fixed;
+			width: 200px;
+			right: 20px;
+			top: 20px;
+			padding: 20px;
+		}
+	</style>
+</head>
+<body>
+	<div class="adm-control">
+		<input type="text" id="objectId"/>
+		<button onclick="setMyObject()">Управлять</button>
+	</div>
+	<canvas id = "canvas" width="1500" height="800"></canvas>
+	<script src="https://code.jquery.com/jquery-2.1.0.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js" ></script>
+	<script src="map.js" ></script>
+	<script src="graphics.js" ></script>
+	<script src="sockets.js" ></script>
+	<script>
+		var canvas = document.getElementById("canvas");
+		var ctx = canvas.getContext("2d");
+		canvas.width = innerWidth
+		canvas.height = innerHeight
+		start_game(canvas, ctx)
+		var keys = {
+			37: "Left",
+			38: "Up",
+			39: "Right",
+			40: "Down",
+			187: "Plus",
+			189: "Minus"
+		}
+		$("body").keydown(function (event) {
+			if (keys[event.keyCode] === "Left") {
+				Game.camera[0] = Game.camera[0] - 20
+			} else if (keys[event.keyCode] === "Right") {
+				Game.camera[0] = Game.camera[0] + 20
+			} else if (keys[event.keyCode] === "Up") {
+				Game.camera[1] = Game.camera[1] - 20
+			} else if (keys[event.keyCode] === "Down") {
+				Game.camera[1] = Game.camera[1] + 20
+			} else if (keys[event.keyCode] === "Plus") {
+				Game.bloock_r = Game.bloock_r + 0.05
+			} else if (keys[event.keyCode] === "Minus") {
+				Game.bloock_r = Game.bloock_r - 0.05
+			}
+		});
+
+
+		if (localStorage.myObjectId) {
+			Game.myId = localStorage.myObjectId
+			let input = document.getElementById("objectId")
+			if (input) {
+				input.value = Game.myId
+			}
+		}
+		function setMyObject() {
+			let input = document.getElementById("objectId")
+			let myObjectId = input.value
+   			Game.myId = myObjectId
+   			localStorage.myObjectId = myObjectId
+		}
+
+		var n = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+		var random = function (length) {
+			var id = [];
+			for (var i = 0; i < length; i++) {
+				var num = n[Math.floor(Math.random() * 10)];
+				id[i] = n[num]
+			}
+			return id.join("")
+		}
+		
+		var xm = 0
+		var ym = 0
+
+		var new_game = function () {
+			game_update(['objects', 'Tower1'], { 
+			id: 'Tower1', 
+			x: 400, 
+			y: 400, 
+			hitpoints: 1000, 
+			look: 'tower1',
+			g: 0,
+			vx: 0,
+			vy: 0,
+			v: 0.2
+			})
+			game_update(['objects', 'Tower2'], { 
+			id: 'Tower2', 
+			x: 1200, 
+			y: 400, 
+			hitpoints: 1000, 
+			look: 'tower1',
+			g: 0,
+			vx: 0,
+			vy: 0,
+			v: 0.2
+			})
+			game_update(['objects', 'Maneken'], { 
+		    id: 'Maneken', 
+		    nickName: 'Maneken', 
+		    x: 500, 
+		    y: 400, 
+		    hitpoints: 100, 
+		    look: 'trooper1',
+		    g: 0,
+		    vx: 0,
+		    vy: 0,
+		    v: 0.2
+		    })
+		    game_update(['objects', 'Maneken2'], { 
+		    id: 'Maneken2', 
+		    nickName: 'Maneken', 
+		    x: 500, 
+		    y: 420, 
+		    hitpoints: 100, 
+		    look: 'trooper1',
+		    g: 0,
+		    vx: 0,
+		    vy: 0,
+		    v: 0.2
+		    })
+		    game_update(['objects', 'Maneken3'], { 
+		    id: 'Maneken', 
+		    nickName: 'Maneken', 
+		    x: 500,
+		    y: 440, 
+		    hitpoints: 100, 
+		    look: 'trooper1',
+		    g: 0,
+		    vx: 0,
+		    vy: 0,
+		    v: 0.2
+		    })
+		    game_update(['objects', 'Maneken4'], { 
+		    id: 'Maneken2', 
+		    nickName: 'Maneken', 
+		    x: 500,
+		    y: 460, 
+		    hitpoints: 100, 
+		    look: 'trooper1',
+		    g: 0,
+		    vx: 0,
+		    vy: 0,
+		    v: 0.2
+		    })
+		    game_update(['objects', 'Maneken5'], { 
+		    id: 'Maneken2', 
+		    nickName: 'Maneken', 
+		    x: 500, 
+		    y: 480, 
+		    hitpoints: 100, 
+		    look: 'trooper1',
+		    g: 0,
+		    vx: 0,
+		    vy: 0,
+		    v: 0.2
+		    })
+		    game_update(['objects', 'Maneken6'], { 
+		    id: 'Maneken', 
+		    nickName: 'Maneken', 
+		    x: 1140, 
+		    y: 400, 
+		    hitpoints: 100, 
+		    look: 'trooper1',
+		    g: 0,
+		    vx: 0,
+		    vy: 0,
+		    v: 0.2
+		    })
+		    game_update(['objects', 'Maneken7'], { 
+		    id: 'Maneken2', 
+		    nickName: 'Maneken', 
+		   	x: 1140, 
+		    y: 420, 
+		    hitpoints: 100, 
+		    look: 'trooper1',
+		    g: 0,
+		    vx: 0,
+		    vy: 0,
+		    v: 0.2
+		    })
+		    game_update(['objects', 'Maneken8'], { 
+		    id: 'Maneken', 
+		    nickName: 'Maneken', 
+		    x: 1140,
+		    y: 440, 
+		    hitpoints: 100, 
+		    look: 'trooper1',
+		    g: 0,
+		    vx: 0,
+		    vy: 0,
+		    v: 0.2
+		    })
+		    game_update(['objects', 'Maneken9'], { 
+		    id: 'Maneken2', 
+		    nickName: 'Maneken', 
+		    x: 1140,   
+		    y: 460, 
+		    hitpoints: 100, 
+		    look: 'trooper1',
+		    g: 0,
+		    vx: 0,
+		    vy: 0,
+		    v: 0.2
+		    })
+		    game_update(['objects', 'Maneken10'], { 
+		    id: 'Maneken2', 
+		    nickName: 'Maneken', 
+		    x: 1140,  
+		    y: 480, 
+		    hitpoints: 100, 
+		    look: 'trooper1',
+		    g: 0,
+		    vx: 0,
+		    vy: 0,
+		    v: 0.2
+		    })
+		}
+
+		var clickHandler = function (event) {			
+			var xm = Math.floor((event.clientX + Game.camera[0]) / Game.bloock_r) 
+			var ym = Math.floor((event.clientY + Game.camera[1]) / Game.bloock_r)
+			if (!Game.myId) {
+				return
+			} 
+			var object = Game.state.objects[Game.myId]
+
+			if (!object) {
+				return
+			}
+
+			var dx = xm - object.x
+			var dy = ym - object.y
+
+			var k = Math.abs(dx / dy)
+			
+			var vy = object.v / Math.sqrt(k * k + 1)
+			var vx = k * vy
+			
+			if (xm < object.x) {
+				vx = -vx
+			}
+			if (ym < object.y) {
+				vy = -vy
+			}
+
+			console.log('vx, vy', [vx, vy])
+
+			// идея один. Запомни в игроке куда нажали
+			game_update(["objects", Game.myId, "target"], [xm, ym])
+
+			// идея два. Посчитай vx и vy тут и задай их как в консоле
+			// тут расчёт по формулам
+			game_update(["objects", Game.myId, "vx"], vx)
+			game_update(["objects", Game.myId, "vy"], vy)
+
+		};
+		
+		var save
+		var clickHandlerV = function (event) {
+			save = _.size(Game.state.shots) 
+
+			if (!Game.myId) {
+				return
+			} 
+			var object = Game.state.objects[Game.myId]
+			if (!object) {
+				return
+			}
+
+			var k = Math.tan(object.g / 180 * Math.PI)			
+			var V_SHOT = 0.4
+			var vy = V_SHOT / Math.sqrt(k * k + 1)
+			var vx = Math.abs(k * vy)
+
+			console.log(object.g)
+			if (object.g >= 0 && object.g < 90) {
+				vy = -vy
+			} else if (object.g <= 0 && object.g > -90) {
+				vy = -vy
+				vx = -vx
+			} else if (object.g <= -90 && object.g > -180) {
+				vx = -vx
+			}
+			var life = 3000
+			var date_create = Date.now()
+			var shotId = random(16)
+			game_update(["shots", shotId], {
+				id: shotId,
+				x: object.x + 49 / 2,
+				y: object.y + 30 / 2,
+				g: object.g,
+				vx: vx,
+				vy: vy,
+				v: V_SHOT,
+				date_create: date_create,
+				time_life: life,
+				time_not_life: date_create + life,
+				myid: Game.myId
+			})
+			console.log(["Id:", shotId, "x:", Game.state.shots[shotId].x, "y:", Game.state.shots[shotId].y, "g:", Game.state.shots[shotId].g].join(" "))
+		}
+
+		var moveHandler = function (event) {
+			var xm = Math.floor((event.clientX + Game.camera[0]) / Game.bloock_r) 
+			var ym = Math.floor((event.clientY + Game.camera[1]) / Game.bloock_r)
+			if (!Game.myId) {
+				return
+			} 
+			var object = Game.state.objects[Game.myId]
+
+			if (!object) {
+				return
+			}
+
+			var dx = xm - object.x
+			var dy = ym - object.y
+
+			var k = dy / dx
+			var g = Math.atan(k) / Math.PI * 180
+			if  (dx < 0) {
+				g = g - 90
+			} else {
+				g = g + 90
+			}			
+			game_update(["objects", Game.myId, "g"], g)
+		}
+
+		$("canvas").mousemove(moveHandler);
+		$("canvas").click(clickHandlerV);
+		$("canvas").on("contextmenu", (e) => {
+			clickHandler(e)
+			return false;
+		})
+	</script>
+</body>
+</html>

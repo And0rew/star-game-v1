@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            html, body {
+                padding: 0px;
+                margin: 0px;
+            }            
+        </style>
+    </head>
+    <body>   
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js" ></script>        
+        <canvas id="canvas" ></canvas>
+        <div>
+            <script >
+                function scaleUp() {
+                    Game.camera.scale += 0.05
+                }
+                function scaleDown() {
+                    Game.camera.scale -= 0.05
+                }
+                function moveCameraLeft() {
+                    Game.camera.x += 100
+                }
+                function moveCameraRight() {
+                    Game.camera.x -= 100
+                }
+                function moveCameraUp() {
+                    Game.camera.y += 100
+                }
+                function moveCameraDown() {
+                    Game.camera.y -= 100
+                }
+            </script>
+
+            <button onclick="scaleUp()">+</button>
+            <button onclick="scaleDown()">-</button>
+            
+            <button onclick="moveCameraDown()">down</button>
+            <button onclick="moveCameraUp()">up</button>
+            <button onclick="moveCameraLeft()">left</button>
+            <button onclick="moveCameraRight()">right</button>
+        </div>        
+        <script src="game.js" ></script>
+        <script src="sockets.js" ></script>
+        <script src="graphics.js" ></script>
+        <script>
+            var canvas = document.getElementById('canvas')    
+            
+            gs_init()
+            game_start(canvas)
+
+            function onResize() {
+                canvas.width  = 1000;
+                canvas.height = 600;                
+            }
+            onResize()
+            window.addEventListener("resize", onResize)
+            
+        </script>
+    </body>
+</html>
