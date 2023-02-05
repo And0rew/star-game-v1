@@ -62,6 +62,9 @@ var start_game = function(canvas, ctx) {
 		for (var key in Game.state.objects) {
 			var object = Game.state.objects[key]
 
+			AI(key)
+
+
 			if (object.vx !== 0 || object.vy !== 0) {
 				object.x = object.x + object.vx * dt
 				object.y = object.y + object.vy * dt
